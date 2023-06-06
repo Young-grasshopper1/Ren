@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     // Start is called before the first frame update
-    private PlayerInputActions playerInputActions;
+    public PlayerInputActions playerInputActions;
     private InputAction movement;
     private Rigidbody2D playerRb;
     public CapsuleCollider2D playerCollider;
@@ -160,6 +160,12 @@ public class PlayerController : MonoBehaviour
         else
         {
             grounded = false;
+            if (playerRb.velocity.y < 0)
+            {
+                jumping = false;
+                playerAnimator.SetBool(isJumping, false);
+                falling = true;
+            }
         }
     }
 
