@@ -40,6 +40,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Aim Input",
+                    "type": "Value",
+                    "id": "395fd7d3-28db-4df9-8d45-625e9364db86",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -135,7 +144,7 @@
                     "name": "",
                     "id": "1166d4e5-035f-4203-9fc7-0ad119481553",
                     "path": "<Gamepad>/leftShoulder",
-                    "interactions": "Press",
+                    "interactions": "Press(behavior=2)",
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "Aim",
@@ -146,7 +155,7 @@
                     "name": "",
                     "id": "b8671cae-d4f3-442f-82ac-3b86799afeac",
                     "path": "<Mouse>/rightButton",
-                    "interactions": "Press",
+                    "interactions": "Press(behavior=2)",
                     "processors": "",
                     "groups": "Keyboard",
                     "action": "Aim",
@@ -216,6 +225,39 @@
                     "processors": "",
                     "groups": "Keyboard",
                     "action": "Throw",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "One Modifier",
+                    "id": "d89614fb-2666-48c6-8ae7-ebe3fba93c7f",
+                    "path": "OneModifier",
+                    "interactions": "",
+                    "processors": "NormalizeVector2",
+                    "groups": "",
+                    "action": "Aim Input",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "modifier",
+                    "id": "110030da-f90e-4c0b-af34-3aa4f779cc7d",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Aim Input",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "binding",
+                    "id": "5bf74ba5-d0c4-4077-854d-c3b598077902",
+                    "path": "<Mouse>/delta",
+                    "interactions": "",
+                    "processors": "AxisDeadzone(min=0.4,max=0.925)",
+                    "groups": "",
+                    "action": "Aim Input",
                     "isComposite": false,
                     "isPartOfComposite": true
                 }
