@@ -1009,10 +1009,10 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
-  speed: 7.5
-  height: 4.5
+  speed: 10
+  height: 6.5
   grounded: 0
-  fallGravity: 8
+  fallGravity: 5
   offset: 0.04
 --- !u!95 &843264417
 Animator:
@@ -1050,6 +1050,9 @@ MonoBehaviour:
   item: {fileID: 0}
   itemSlot: {fileID: 1041753882}
   reticle: {fileID: 161837935}
+  aimDirection: {x: 0, y: 0}
+  aiming: 0
+  aimSpeed: 5
 --- !u!1 &848168907
 GameObject:
   m_ObjectHideFlags: 0

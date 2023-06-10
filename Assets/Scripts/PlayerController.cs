@@ -6,6 +6,8 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
+    private ThrowObjects throwObjectsScript;
+
     // Start is called before the first frame update
     public PlayerInputActions playerInputActions;
     private InputAction movement;
@@ -37,6 +39,7 @@ public class PlayerController : MonoBehaviour
         playerRb = GetComponent<Rigidbody2D>();
         playerAnimator = GetComponent<Animator>();
         playerCollider = GetComponent<CapsuleCollider2D>();
+        throwObjectsScript = GetComponent<ThrowObjects>();
     }
 
     private void OnEnable()
@@ -45,7 +48,22 @@ public class PlayerController : MonoBehaviour
         movement.Enable();
 
         playerInputActions.Player.Jump.performed += DoJump;
+        playerInputActions.Player.Jump.canceled += Jump_canceled;
         playerInputActions.Player.Jump.Enable();
+        
+    }
+
+    private void Jump_canceled(InputAction.CallbackContext context)
+    {
+
+        if (transform.position.y < downwardForceHeight && jumping)
+        {
+            Debug.Log("Jump Cancelled");
+            playerRb.AddForce(Vector2.down * jumpForce, ForceMode2D.Impulse);
+            jumping = false;
+            playerAnimator.SetBool(isJumping, false);
+            falling = true;
+        }
     }
 
     private void DoJump(InputAction.CallbackContext context)
@@ -120,15 +138,28 @@ public class PlayerController : MonoBehaviour
     void HandleRotation()
     {
         // rotates the player by 180 degrees in the y axis
-        if (playerMovement.x < 0 && transform.eulerAngles.y == 0)
+        if (throwObjectsScript.aiming)
         {
-            transform.Rotate(Vector2.up, 180);
+            if (throwObjectsScript.aimDirection.x < 0 && transform.eulerAngles.y == 0)
+            {
+                transform.Rotate(Vector2.up, 180);
+            }
+            if (throwObjectsScript.aimDirection.x > 0 && transform.eulerAngles.y == 180)
+            {
+                transform.Rotate(Vector2.up, -180);
+            }
         }
-        if ( playerMovement.x > 0 && transform.eulerAngles.y == 180)
+        else
         {
-            transform.Rotate(Vector2.up, -180);
+            if (playerMovement.x < 0 && transform.eulerAngles.y == 0)
+            {
+                transform.Rotate(Vector2.up, 180);
+            }
+            if (playerMovement.x > 0 && transform.eulerAngles.y == 180)
+            {
+                transform.Rotate(Vector2.up, -180);
+            }
         }
-
     }
 
     void HandleFalling()

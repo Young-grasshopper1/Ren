@@ -10,10 +10,11 @@ public class ThrowObjects : MonoBehaviour
     [SerializeField] GameObject item;
     [SerializeField] GameObject itemSlot;
     [SerializeField] GameObject reticle;
-    Vector2 aimDirection;
+    public Vector2 aimDirection;
     Vector2 aimInput;
     InputAction aimValue;
-    bool aiming = false;
+    public bool aiming = false;
+    [SerializeField] float aimSpeed = 5.0f;
     
     // Start is called before the first frame update
 
@@ -28,7 +29,7 @@ public class ThrowObjects : MonoBehaviour
         {
             Debug.Log("Aiming");
             reticle.gameObject.SetActive(true);
-
+            aimDirection = aimValue.ReadValue<Vector2>();
 
             aiming = true;
         }
@@ -47,6 +48,7 @@ public class ThrowObjects : MonoBehaviour
     {
         playerInputActions.Player.Aim.Disable();
         playerInputActions.Player.AimInput.Disable();
+        playerInputActions.Player.Throw.Disable();
     }
 
     void Start()
@@ -57,6 +59,13 @@ public class ThrowObjects : MonoBehaviour
         playerInputActions.Player.Aim.Enable();
         playerInputActions.Player.AimInput.Enable();
         aimValue = playerInputActions.Player.AimInput;
+        playerInputActions.Player.Throw.performed += Throw_performed;
+        playerInputActions.Player.Throw.Enable();
+    }
+
+    private void Throw_performed(InputAction.CallbackContext context)
+    {
+        Debug.Log("Thrown");
     }
 
     // Update is called once per frame
@@ -91,10 +100,12 @@ public class ThrowObjects : MonoBehaviour
         aimInput = aimValue.ReadValue<Vector2>();
         if (aimInput!= Vector2.zero)
         {
-            Debug.Log(aimInput);
-            reticle.transform.position = new Vector3(aimInput.x + transform.position.x, aimInput.y + transform.position.y + 1.0f, 0);
+            aimDirection = aimInput.normalized;
+            //Debug.Log(aimDirection);
+            reticle.transform.position = new Vector3(aimDirection.x + transform.position.x, aimDirection.y + transform.position.y + 1.0f, 0);
         }
         
     }
+
 
 }
