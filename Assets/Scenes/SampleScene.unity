@@ -1050,6 +1050,7 @@ MonoBehaviour:
   item: {fileID: 0}
   itemSlot: {fileID: 1041753882}
   reticle: {fileID: 161837935}
+  throwForce: 10
   aimDirection: {x: 0, y: 0}
   aiming: 0
   aimSpeed: 5

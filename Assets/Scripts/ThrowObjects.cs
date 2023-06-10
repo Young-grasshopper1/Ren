@@ -10,11 +10,14 @@ public class ThrowObjects : MonoBehaviour
     [SerializeField] GameObject item;
     [SerializeField] GameObject itemSlot;
     [SerializeField] GameObject reticle;
+    [SerializeField] float throwForce;
     public Vector2 aimDirection;
     Vector2 aimInput;
     InputAction aimValue;
     public bool aiming = false;
     [SerializeField] float aimSpeed = 5.0f;
+
+    Rigidbody2D itemRb;
     
     // Start is called before the first frame update
 
@@ -29,7 +32,15 @@ public class ThrowObjects : MonoBehaviour
         {
             Debug.Log("Aiming");
             reticle.gameObject.SetActive(true);
-            aimDirection = aimValue.ReadValue<Vector2>();
+            aimDirection = new Vector2(0, 0);
+            if (transform.eulerAngles.y == 0)
+            {
+                reticle.transform.position = new Vector3(transform.position.x + 1.0f, transform.position.y + 1.0f, 0);
+            }
+            else
+            {
+                reticle.transform.position = new Vector3(transform.position.x - 1.0f, transform.position.y + 1.0f, 0);
+            }
 
             aiming = true;
         }
@@ -66,17 +77,16 @@ public class ThrowObjects : MonoBehaviour
     private void Throw_performed(InputAction.CallbackContext context)
     {
         Debug.Log("Thrown");
+        item.transform.position = reticle.transform.position;
+        itemRb.isKinematic = false;
+        item.GetComponent<Collider2D>().enabled = true;
+        itemRb.AddForce(aimDirection * throwForce, ForceMode2D.Impulse);
+        item.transform.parent = null;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (item != null)
-        {
-            item.transform.position = itemSlot.transform.position;
-            item.transform.rotation = Quaternion.identity;
-        
-        }
 
         if (aiming)
         {
@@ -89,8 +99,18 @@ public class ThrowObjects : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Throwable"))
         {
-            item = collision.gameObject;
-            item.GetComponent<CircleCollider2D>().enabled = false;
+            if (item == null)
+            {
+                item = collision.gameObject;
+                item.GetComponent<CircleCollider2D>().enabled = false;
+                itemRb = item.GetComponent<Rigidbody2D>();
+                itemRb.velocity = Vector2.zero;
+                itemRb.isKinematic = true;
+                itemRb.freezeRotation = true;
+                item.transform.parent = itemSlot.transform;
+                item.transform.position = itemSlot.transform.position;
+                item.transform.rotation = Quaternion.identity;
+            }
 
         }
     }
