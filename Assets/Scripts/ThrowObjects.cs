@@ -16,8 +16,14 @@ public class ThrowObjects : MonoBehaviour
     InputAction aimValue;
     public bool aiming = false;
     [SerializeField] float aimSpeed = 5.0f;
+    bool hasItem = false;
+    [SerializeField] float minYClamp = 0;
+    [SerializeField] float maxYClamp = 1.0f;
+    [SerializeField] float minXClamp = 0.0f;
+    [SerializeField] float maxXClamp = 1.0f;
 
     Rigidbody2D itemRb;
+    Rigidbody2D playerRb;
     
     // Start is called before the first frame update
 
@@ -35,11 +41,11 @@ public class ThrowObjects : MonoBehaviour
             aimDirection = new Vector2(0, 0);
             if (transform.eulerAngles.y == 0)
             {
-                reticle.transform.position = new Vector3(transform.position.x + 1.0f, transform.position.y + 1.0f, 0);
+                reticle.transform.position = new Vector3(transform.position.x + 1.5f, transform.position.y + 1.5f, 0);
             }
             else
             {
-                reticle.transform.position = new Vector3(transform.position.x - 1.0f, transform.position.y + 1.0f, 0);
+                reticle.transform.position = new Vector3(transform.position.x - 1.5f, transform.position.y + 1.5f, 0);
             }
 
             aiming = true;
@@ -65,6 +71,7 @@ public class ThrowObjects : MonoBehaviour
     void Start()
     {
         playerController = GetComponent<PlayerController>();
+        playerRb = GetComponent<Rigidbody2D>();
         playerInputActions = playerController.playerInputActions;
         playerInputActions.Player.Aim.performed += Aiming;
         playerInputActions.Player.Aim.Enable();
@@ -76,12 +83,18 @@ public class ThrowObjects : MonoBehaviour
 
     private void Throw_performed(InputAction.CallbackContext context)
     {
-        Debug.Log("Thrown");
-        item.transform.position = reticle.transform.position;
-        itemRb.isKinematic = false;
-        item.GetComponent<Collider2D>().enabled = true;
-        itemRb.AddForce(aimDirection * throwForce, ForceMode2D.Impulse);
-        item.transform.parent = null;
+        if (hasItem)
+        {
+            hasItem = false;
+            Debug.Log("Thrown");
+            item.transform.position = reticle.transform.position;
+            itemRb.isKinematic = false;
+            itemRb.velocity = playerRb.velocity;
+            item.GetComponent<Collider2D>().enabled = true;
+            itemRb.AddForce(aimDirection * throwForce, ForceMode2D.Impulse);
+            item.transform.parent = null;
+        }
+
     }
 
     // Update is called once per frame
@@ -99,8 +112,9 @@ public class ThrowObjects : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Throwable"))
         {
-            if (item == null)
+            if (item == null || (item != null && !hasItem))
             {
+                hasItem = true;
                 item = collision.gameObject;
                 item.GetComponent<CircleCollider2D>().enabled = false;
                 itemRb = item.GetComponent<Rigidbody2D>();
@@ -111,7 +125,6 @@ public class ThrowObjects : MonoBehaviour
                 item.transform.position = itemSlot.transform.position;
                 item.transform.rotation = Quaternion.identity;
             }
-
         }
     }
 
@@ -121,8 +134,14 @@ public class ThrowObjects : MonoBehaviour
         if (aimInput!= Vector2.zero)
         {
             aimDirection = aimInput.normalized;
+            if (aimDirection.y < minYClamp)
+            {
+                aimDirection.x = Mathf.Clamp(Mathf.Abs(aimDirection.x), minXClamp, maxXClamp) * Mathf.Sign(aimDirection.x);
+            }
             //Debug.Log(aimDirection);
-            reticle.transform.position = new Vector3(aimDirection.x + transform.position.x, aimDirection.y + transform.position.y + 1.0f, 0);
+            aimDirection.y = Mathf.Clamp(aimDirection.y, minYClamp,maxYClamp);
+            reticle.transform.position = new Vector3(aimDirection.x + transform.position.x, aimDirection.y + transform.position.y + 1.5f, 0);
+
         }
         
     }
