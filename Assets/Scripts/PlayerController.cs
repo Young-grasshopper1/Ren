@@ -95,7 +95,7 @@ public class PlayerController : MonoBehaviour
     {
         //sets the x velocity based off input
         playerRb.velocity = new Vector2(playerMovement.x * speed, playerRb.velocity.y);
-
+        GroundCheck();
 
     }
 
@@ -127,7 +127,7 @@ public class PlayerController : MonoBehaviour
         {
             HandleFalling();
         }
-        GroundCheck();
+
     }
 
     private void LateUpdate()
