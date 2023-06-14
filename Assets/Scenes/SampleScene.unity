@@ -1266,6 +1266,21 @@ MonoBehaviour:
   grounded: 0
   fallGravity: 5
   offset: 0.04
+  item: {fileID: 0}
+  itemSlot: {fileID: 1041753882}
+  reticle: {fileID: 161837935}
+  throwableLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  throwForce: 5
+  aimDirection: {x: 0, y: 0}
+  aiming: 0
+  aimSpeed: 5
+  minYClamp: 0
+  maxYClamp: 1
+  minXClamp: 0
+  maxXClamp: 1
+  pickUpOffset: 1
 --- !u!95 &843264417
 Animator:
   serializedVersion: 5
@@ -1299,22 +1314,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05c32798741910845aa0e83ea759d18f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  item: {fileID: 0}
-  itemSlot: {fileID: 1041753882}
-  reticle: {fileID: 161837935}
-  throwableLayer:
-    serializedVersion: 2
-    m_Bits: 128
-  throwForce: 15
-  aimDirection: {x: 0, y: 0}
-  aiming: 0
-  aimSpeed: 5
-  minYClamp: -0.5
-  maxYClamp: 1
-  minXClamp: 0.8
-  maxXClamp: 1
-  pickUpOffset: 1.5
-  itemRb: {fileID: 0}
 --- !u!1 &847927816
 GameObject:
   m_ObjectHideFlags: 0
